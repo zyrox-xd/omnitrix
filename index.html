@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cosmatrix - Spin to Lock</title>
+    <title>Cosmatrix - Lock In</title>
     <style>
         body {
             background-color: #000;
@@ -25,39 +25,63 @@
             height: 350px;
             border-radius: 50%;
             background: #000;
-            /* Outer glowing rim */
-            box-shadow: 0 0 15px rgba(255, 0, 255, 0.2), inset 0 0 20px #000;
-            border: 5px solid #111;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.25), inset 0 0 30px #000;
+            border: 4px solid #1a1a1a;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        /* The container that holds the image and spins */
-        #dial-container {
+        /* The layer that rotates */
+        #dial-rotating-layer {
             width: 100%;
             height: 100%;
+            position: relative;
             border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             will-change: transform;
-            /* No transition by default so dragging is instant */
+            /* Transition is managed by JS classes */
         }
 
-        #dial-image {
+        /* Smooth transition class for the "Locking" movement */
+        .locking-movement {
+            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy lock effect */
+        }
+
+        /* Images */
+        .dial-face {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 50%;
+            position: absolute;
+            top: 0;
+            left: 0;
             pointer-events: none;
+            transition: opacity 0.4s ease-out; /* Fast fade */
             filter: drop-shadow(0 0 10px #ff00ff);
         }
 
-        /* --- ANIMATION CLASS --- */
-        /* This class is added via JS when we want it to spin smoothly */
-        .spinning-to-lock {
-            transition: transform 1.5s cubic-bezier(0.25, 1, 0.5, 1); /* Starts fast, slows down at end */
+        #front-dial-image {
+            z-index: 2;
+            opacity: 1;
+        }
+
+        #back-thankyou-image {
+            z-index: 1;
+            opacity: 0;
+            transform: scale(0.9); /* Starts slightly smaller */
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+
+        /* --- LOCKED STATE --- */
+        .is-locked #front-dial-image {
+            opacity: 0;
+        }
+
+        .is-locked #back-thankyou-image {
+            opacity: 1;
+            transform: scale(1); /* Popping effect */
+            filter: drop-shadow(0 0 30px #ff00ff) brightness(1.2);
         }
 
     </style>
@@ -65,37 +89,30 @@
 <body>
 
     <div class="omnitrix-container" id="touch-zone">
-        <div id="dial-container">
-            <img id="dial-image" src="image_1.jpg" alt="Dial">
+        <div id="dial-rotating-layer">
+            <img id="front-dial-image" class="dial-face" src="image_1.jpg" alt="Dial">
+            <img id="back-thankyou-image" class="dial-face" src="image_5.jpg" alt="Thank You">
         </div>
     </div>
 
     <script>
         const touchZone = document.getElementById('touch-zone');
-        const dialContainer = document.getElementById('dial-container');
-        const dialImage = document.getElementById('dial-image');
+        const rotatingLayer = document.getElementById('dial-rotating-layer');
+        const frontImage = document.getElementById('front-dial-image');
 
-        // --- IMAGES ---
-        // 0 deg = Slide to Choose (image_1.jpg)
-        // 90 deg = Whitening (image_3.jpg)
-        // 180 deg = Anti-Aging (image_4.jpg)
-        // 270 deg = Weight (image_2.jpg)
+        // Config
         const sectors = [
             { src: "image_1.jpg" }, // 0
             { src: "image_3.jpg" }, // 1 (90)
             { src: "image_4.jpg" }, // 2 (180)
             { src: "image_2.jpg" }  // 3 (270)
         ];
-        
-        // The final destination image
-        const thankYouImage = "image_5.jpg";
 
         // Preload
-        const preloadImg = new Image(); preloadImg.src = thankYouImage;
         sectors.forEach(s => { const img = new Image(); img.src = s.src; });
 
         let isDragging = false;
-        let isLocked = false; // Prevents interaction after selection
+        let isLocked = false;
         let startAngle = 0;
         let currentRotation = 0;
 
@@ -111,16 +128,13 @@
             if (isLocked) return;
             if(e.cancelable) e.preventDefault();
             
-            // Remove transition class so dragging is instant
-            dialContainer.classList.remove('spinning-to-lock');
+            // Remove smooth transition so dragging is instant and follows finger
+            rotatingLayer.classList.remove('locking-movement');
             
             isDragging = true;
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            
-            // Calculate offset
-            let fingerAngle = getAngle(clientX, clientY);
-            startAngle = fingerAngle - currentRotation;
+            startAngle = getAngle(clientX, clientY) - currentRotation;
         }
 
         function handleMove(e) {
@@ -131,16 +145,15 @@
             const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
             currentRotation = getAngle(clientX, clientY) - startAngle;
-            dialContainer.style.transform = `rotate(${currentRotation}deg)`;
+            rotatingLayer.style.transform = `rotate(${currentRotation}deg)`;
 
-            // Swap images based on sector
+            // Swap active image
             let normalizedRot = currentRotation % 360;
             if (normalizedRot < 0) normalizedRot += 360;
             let activeSectorIndex = Math.floor((normalizedRot + 45) / 90) % 4;
             
-            let targetSrc = sectors[activeSectorIndex].src;
-            if (!dialImage.src.includes(targetSrc)) {
-                dialImage.src = targetSrc;
+            if (!frontImage.src.includes(sectors[activeSectorIndex].src)) {
+                frontImage.src = sectors[activeSectorIndex].src;
                 if (navigator.vibrate) navigator.vibrate(10);
             }
         }
@@ -149,73 +162,58 @@
             isDragging = false;
         }
 
-        // --- SPIN TO THANK YOU LOGIC ---
-        
-        // Detect Tap
+        // --- TAP TO LOCK LOGIC ---
         let tapStartTime = 0;
         touchZone.addEventListener('touchstart', (e) => { tapStartTime = new Date().getTime(); handleStart(e); }, {passive: false});
         touchZone.addEventListener('touchend', (e) => { 
             handleEnd();
-            if (new Date().getTime() - tapStartTime < 200) lockInSelection();
+            if (new Date().getTime() - tapStartTime < 200) lockIn();
         });
         
-        // Mouse support
+        // Mouse
         touchZone.addEventListener('mousedown', (e) => { tapStartTime = new Date().getTime(); handleStart(e); });
         window.addEventListener('mousemove', handleMove);
         window.addEventListener('mouseup', () => { 
             handleEnd();
-            if (new Date().getTime() - tapStartTime < 200) lockInSelection();
+            if (new Date().getTime() - tapStartTime < 200) lockIn();
         });
         window.addEventListener('touchmove', handleMove, {passive: false});
 
 
-        function lockInSelection() {
+        function lockIn() {
             if (isLocked) return;
             isLocked = true;
             isDragging = false;
 
-            // 1. Calculate the Target Rotation
-            // We want it to spin at least 2 full times (720 degrees)
-            // And land exactly at 0 degrees (upright) relative to current rotation.
+            // 1. Calculate the shortest path to "Upright" (0 degrees relative)
+            // If we are at 350, go to 360. If at 10, go to 0. If at -10, go to 0.
+            // This ensures we don't spin wildly, just snap to center.
+            let nearestUpright = Math.round(currentRotation / 360) * 360;
             
-            // Round current rotation to nearest full circle, then add 2 circles (720)
-            // This ensures it spins FORWARD to the next upright position
-            let nextUprightPosition = Math.ceil(currentRotation / 360) * 360;
-            if (nextUprightPosition === currentRotation) nextUprightPosition += 360; // Ensure it moves if already at 0
-            
-            let targetRotation = nextUprightPosition + 720; // Add extra spins
+            // 2. Add transition class for smooth movement
+            rotatingLayer.classList.add('locking-movement');
 
-            // 2. Apply CSS Transition
-            dialContainer.classList.add('spinning-to-lock');
-            
-            // 3. Trigger the spin
-            // Small timeout to allow CSS class to apply
+            // 3. Trigger the visual changes
             requestAnimationFrame(() => {
-                dialContainer.style.transform = `rotate(${targetRotation}deg)`;
+                // Rotate to center
+                rotatingLayer.style.transform = `rotate(${nearestUpright}deg)`;
+                // Update rotation var so subsequent drags start from correct spot
+                currentRotation = nearestUpright; 
+                
+                // Fade swap
+                touchZone.classList.add('is-locked');
             });
 
-            // 4. Haptic Buzz
-            if (navigator.vibrate) navigator.vibrate([50, 50, 50, 50, 200]);
+            // 4. Haptic Feedback (Heavy Thud)
+            if (navigator.vibrate) navigator.vibrate([70]);
 
-            // 5. Swap to "Thank You" image MID-SPIN
-            // We do this after 300ms so the wheel is moving fast and blurring
-            // This hides the image swap, making it look like it "landed" on it.
+            // 5. Reset after 3 seconds
             setTimeout(() => {
-                dialImage.src = thankYouImage;
-            }, 500);
-
-            // 6. Optional: Reset after 5 seconds to allow trying again
-            setTimeout(() => {
-                // Reset internal logic without animation
-                dialContainer.classList.remove('spinning-to-lock');
-                // Remove the extra rotations so the numbers don't get huge
-                currentRotation = currentRotation % 360; 
-                dialContainer.style.transform = `rotate(${currentRotation}deg)`;
-                
-                // Switch back to start image
-                dialImage.src = sectors[0].src;
+                touchZone.classList.remove('is-locked');
                 isLocked = false;
-            }, 5000);
+                // Switch front image back to start
+                frontImage.src = sectors[0].src;
+            }, 3000);
         }
 
     </script>

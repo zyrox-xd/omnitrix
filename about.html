@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - COSMATRIX INTERNATIONAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-pink: #f4b7c8;
+            --deep-black: #000000;
+            --off-white: #fbfbfb;
+            --charcoal: #222222;
+            --line-grey: #d8d8d8;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--charcoal);
+            background: var(--off-white);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            padding: 1.5rem 5%;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--deep-black);
+        }
+
+        .logo span {
+            color: var(--primary-pink);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--charcoal);
+            font-weight: 400;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-pink);
+        }
+
+        /* Page Header */
+        .page-header {
+            background: white;
+            padding: 6rem 5% 4rem;
+            text-align: center;
+            border-bottom: 1px solid var(--line-grey);
+        }
+
+        .page-header h1 {
+            font-size: 3.5rem;
+            color: var(--deep-black);
+            margin-bottom: 1rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--charcoal);
+            font-weight: 300;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Content Sections */
+        .content-section {
+            padding: 5rem 5%;
+        }
+
+        .content-section.pink-bg {
+            background: linear-gradient(135deg, rgba(244, 183, 200, 0.1) 0%, rgba(249, 202, 214, 0.1) 100%);
+        }
+
+        .content-section.white-bg {
+            background: white;
+        }
+
+        .section-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-header h2 {
+            font-size: 2.8rem;
+            color: var(--deep-black);
+            margin-bottom: 1rem;
+        }
+
+        .section-divider {
+            width: 80px;
+            height: 2px;
+            background: var(--primary-pink);
+            margin: 0 auto 2rem;
+        }
+
+        .section-text {
+            font-size: 1.1rem;
+            line-height: 1.9;
+            color: var(--charcoal);
+            font-weight: 300;
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Two Column Layout */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .column-content h3 {
+            font-size: 2rem;
+            color: var(--deep-black);
+            margin-bottom: 1.5rem;
+        }
+
+        .column-content p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--charcoal);
+            font-weight: 300;
+            margin-bottom: 1rem;
+        }
+
+        /* Values Grid */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .value-card {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .value-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(244, 183, 200, 0.2);
+        }
+
+        .value-card h3 {
+            font-size: 1.6rem;
+            color: var(--primary-pink);
+            margin-bottom: 1rem;
+        }
+
+        .value-card p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--charcoal);
+            font-weight: 300;
+        }
+
+        /* Supply List */
+        .supply-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .supply-item {
+            background: white;
+            padding: 2rem;
+            border-left: 3px solid var(--primary-pink);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .supply-item:hover {
+            border-left-width: 5px;
+            transform: translateX(5px);
+        }
+
+        .supply-item h4 {
+            font-size: 1.3rem;
+            color: var(--deep-black);
+            margin-bottom: 0.8rem;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .supply-item p {
+            font-size: 0.95rem;
+            color: var(--charcoal);
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: var(--primary-pink);
+            padding: 4rem 5%;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            color: var(--deep-black);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            color: var(--charcoal);
+            margin-bottom: 2rem;
+            font-weight: 300;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            background: var(--deep-black);
+            color: white;
+        }
+
+        .btn:hover {
+            background: var(--charcoal);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--deep-black);
+            color: white;
+            padding: 4rem 5% 2rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--primary-pink);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 300;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-pink);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+
+        .footer-note {
+            margin-top: 1rem;
+            font-style: italic;
+            color: var(--primary-pink);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1.5rem;
+            }
+
+            .page-header h1 {
+                font-size: 2.5rem;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .section-header h2 {
+                font-size: 2rem;
+            }
+
+            .values-grid,
+            .supply-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">COSMATRIX<span>.</span></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <h1>About COSMATRIX</h1>
+        <p>Where luxury meets clinical excellence in professional beauty supply</p>
+    </section>
+
+    <!-- Our Vision -->
+    <section class="content-section white-bg">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Our Vision</h2>
+                <div class="section-divider"></div>
+            </div>
+            <p class="section-text">
+                COSMATRIX INTERNATIONAL was founded on a simple yet powerful belief: that every professional deserves access to authentic, premium-grade clinical beauty products. We bridge the gap between world-renowned manufacturers and the practitioners who transform lives through aesthetic excellence. Our vision is to become the most trusted name in professional beauty supply, known not just for what we provide, but for how we elevate the entire industry.
+            </p>
+        </div>
+    </section>
+
+    <!-- Our Quality Standard -->
+    <section class="content-section pink-bg">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Our Quality Standard</h2>
+                <div class="section-divider"></div>
+            </div>
+            <div class="values-grid">
+                <div class="value-card">
+                    <h3>Authenticity Guaranteed</h3>
+                    <p>Every product is sourced directly from verified manufacturers. We maintain strict chain-of-custody documentation and never compromise on authenticity.</p>
+                </div>
+                <div class="value-card">
+                    <h3>Clinical Grade Only</h3>
+                    <p>We exclusively supply professional-strength formulations designed for clinical use. No diluted versions, no consumer-grade alternatives.</p>
+                </div>
+                <div class="value-card">
+                    <h3>Rigorous Verification</h3>
+                    <p>Each shipment undergoes thorough inspection to ensure product integrity, proper storage conditions, and compliance with safety standards.</p>
+                </div>
+                <div class="value-card">
+                    <h3>Transparent Partnership</h3>
+                    <p>We believe in complete transparency with our clients. From sourcing to delivery, you'll always know exactly what you're getting and where it comes from.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who We Supply -->
+    <section class="content-section white-bg">
+        <div class="section-container">
+            <div class="section-header">
+                <h2>Who We Supply</h2>
+                <div class="section-divider"></div>
+            </div>
+            <p class="section-text">
+                COSMATRIX serves a diverse network of beauty professionals who demand excellence. We understand that your reputation depends on the quality of products you use, which is why we've built lasting relationships with industry leaders across multiple sectors.
+            </p>
+            <div class="supply-list">
+                <div class="supply-item">
+                    <h4>Dermatology Clinics</h4>
+                    <p>Medical-grade skincare solutions for clinical dermatology practices seeking the highest efficacy standards.</p>
+                </div>
+                <div class="supply-item">
+                    <h4>Aesthetic Centers</h4>
+                    <p>Premium aesthetic products for practices specializing in advanced facial treatments and rejuvenation procedures.</p>
+                </div>
+                <div class="supply-item">
+                    <h4>Medical Spas</h4>
+                    <p>Luxury clinical formulations that bridge medical efficacy with spa-level experience and client satisfaction.</p>
+                </div>
+                <div class="supply-item">
+                    <h4>Beauty Salons</h4>
+                    <p>Professional-strength products for salons committed to delivering exceptional skincare results to their clients.</p>
+                </div>
+                <div class="supply-item">
+                    <h4>Authorized Resellers</h4>
+                    <p>Wholesale partnerships with verified distributors who share our commitment to authenticity and excellence.</p>
+                </div>
+                <div class="supply-item">
+                    <h4>Training Academies</h4>
+                    <p>Educational institutions teaching the next generation of beauty professionals with industry-leading products.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ethical Sourcing -->
+    <section class="content-section pink-bg">
+        <div class="section-container">
+            <div class="two-column">
+                <div class="column-content">
+                    <h3>Ethical Sourcing & Authenticity</h3>
+                    <p>
+                        In an industry where counterfeits and grey market goods pose serious risks, COSMATRIX stands as a beacon of integrity. We work exclusively with authorized manufacturers and legitimate distribution channels, ensuring every product you receive is genuine and properly handled.
+                    </p>
+                    <p>
+                        Our commitment extends beyond legality to ethics. We partner only with brands that demonstrate responsible manufacturing practices, sustainable sourcing where possible, and respect for both their workers and the environment.
+                    </p>
+                    <p>
+                        When you choose COSMATRIX, you're not just buying products—you're joining a movement toward transparency, accountability, and excellence in professional beauty supply.
+                    </p>
+                </div>
+                <div class="column-content">
+                    <h3>Why Professionals Choose Us</h3>
+                    <p>
+                        Trust is earned through consistency. For years, COSMATRIX has delivered on our promise to provide authentic, premium-grade products with impeccable service.
+                    </p>
+                    <p>
+                        Our clients know they can depend on us for rapid fulfillment, competitive wholesale pricing, and support that goes beyond the transaction. We're invested in your success because your success reflects the quality of what we provide.
+                    </p>
+                    <p>
+                        From small boutique practices to large clinic chains, professionals across the globe choose COSMATRIX as their trusted partner in clinical beauty excellence.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <h2>Ready to Partner With Excellence?</h2>
+        <p>Join the network of professionals who trust COSMATRIX for their clinical beauty needs</p>
+        <a href="contact.html" class="btn">Contact Us Today</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>COSMATRIX</h3>
+                <p>Your trusted source for luxury clinical beauty products. Supplying professionals worldwide with authentic, premium formulations.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="about.html">About Us</a>
+                <a href="shop.html">Shop Products</a>
+                <a href="contact.html">Contact</a>
+                <a href="wholesale.html">Wholesale Inquiry</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: info@cosmatrix.com</p>
+                <p>WhatsApp: +91 XXX XXX XXXX</p>
+                <p>Business Hours: Mon-Sat, 9AM-6PM</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 COSMATRIX INTERNATIONAL. All rights reserved.</p>
+            <p class="footer-note">For professional use only</p>
+        </div>
+    </footer>
+</body>
+</html>

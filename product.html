@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Vitamin C Serum - COSMATRIX INTERNATIONAL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-pink: #f4b7c8;
+            --deep-black: #000000;
+            --off-white: #fbfbfb;
+            --charcoal: #222222;
+            --line-grey: #d8d8d8;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--charcoal);
+            background: var(--off-white);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 400;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            padding: 1.5rem 5%;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: var(--deep-black);
+        }
+
+        .logo span {
+            color: var(--primary-pink);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 3rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--charcoal);
+            font-weight: 400;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary-pink);
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            background: white;
+            padding: 1.5rem 5%;
+            border-bottom: 1px solid var(--line-grey);
+        }
+
+        .breadcrumb-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .breadcrumb a {
+            color: var(--charcoal);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-pink);
+        }
+
+        .breadcrumb span {
+            color: var(--charcoal);
+            margin: 0 0.5rem;
+        }
+
+        /* Product Section */
+        .product-section {
+            padding: 4rem 5%;
+            background: white;
+        }
+
+        .product-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 5rem;
+            align-items: start;
+        }
+
+        .product-gallery {
+            position: sticky;
+            top: 120px;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 600px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            color: var(--primary-pink);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+            margin-bottom: 1.5rem;
+        }
+
+        .thumbnail-gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        .thumbnail {
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(135deg, #f9f9f9 0%, #efefef 100%);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            font-size: 2rem;
+            color: var(--primary-pink);
+        }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: var(--primary-pink);
+            box-shadow: 0 4px 15px rgba(244, 183, 200, 0.3);
+        }
+
+        .product-details {
+            padding-top: 1rem;
+        }
+
+        .product-category {
+            font-size: 0.9rem;
+            color: var(--primary-pink);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 1rem;
+        }
+
+        .product-title {
+            font-size: 3rem;
+            color: var(--deep-black);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+
+        .product-price {
+            font-size: 2.5rem;
+            color: var(--deep-black);
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .wholesale-note {
+            font-size: 0.95rem;
+            color: var(--primary-pink);
+            font-weight: 400;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+
+        .product-description {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--charcoal);
+            font-weight: 300;
+            margin-bottom: 2.5rem;
+            padding-bottom: 2.5rem;
+            border-bottom: 1px solid var(--line-grey);
+        }
+
+        .product-features {
+            margin-bottom: 2.5rem;
+        }
+
+        .product-features h3 {
+            font-size: 1.5rem;
+            color: var(--deep-black);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-list {
+            list-style: none;
+        }
+
+        .feature-list li {
+            padding: 0.8rem 0;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--charcoal);
+            font-weight: 300;
+            line-height: 1.7;
+        }
+
+        .feature-list li:before {
+            content: "✦";
+            position: absolute;
+            left: 0;
+            color: var(--primary-pink);
+            font-size: 1.2rem;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .quantity-selector label {
+            font-weight: 500;
+            color: var(--charcoal);
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--line-grey);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .quantity-btn {
+            background: white;
+            border: none;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--charcoal);
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: var(--primary-pink);
+            color: white;
+        }
+
+        .quantity-input {
+            border: none;
+            width: 60px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 500;
+            padding: 0.8rem 0;
+            border-left: 1px solid var(--line-grey);
+            border-right: 1px solid var(--line-grey);
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 1.2rem 2.5rem;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .btn-primary {
+            background: var(--deep-black);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--charcoal);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn-whatsapp {
+            background: var(--primary-pink);
+            color: var(--deep-black);
+        }
+
+        .btn-whatsapp:hover {
+            background: #f9cad6;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(244, 183, 200, 0.4);
+        }
+
+        .product-meta {
+            padding: 2rem;
+            background: var(--off-white);
+            border-radius: 8px;
+            margin-top: 2rem;
+        }
+
+        .meta-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 0;
+            border-bottom: 1px solid var(--line-grey);
+        }
+
+        .meta-item:last-child {
+            border-bottom: none;
+        }
+
+        .meta-label {
+            font-weight: 500;
+            color: var(--charcoal);
+        }
+
+        .meta-value {
+            color: var(--charcoal);
+            font-weight: 300;
+        }
+
+        /* Related Products */
+        .related-section {
+            padding: 5rem 5%;
+            background: var(--off-white);
+        }
+
+        .related-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--deep-black);
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .related-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .related-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(244, 183, 200, 0.25);
+        }
+
+        .related-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--primary-pink);
+        }
+
+        .related-info {
+            padding: 1.5rem;
+        }
+
+        .related-name {
+            font-size: 1.2rem;
+            color: var(--deep-black);
+            margin-bottom: 0.5rem;
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        .related-price {
+            font-size: 1.3rem;
+            color: var(--deep-black);
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--deep-black);
+            color: white;
+            padding: 4rem 5% 2rem;
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--primary-pink);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .footer-section p,
+        .footer-section a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 300;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary-pink);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+
+        .footer-note {
+            margin-top: 1rem;
+            font-style: italic;
+            color: var(--primary-pink);
+        }
+
+        @media (max-width: 968px) {
+            .product-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .product-gallery {
+                position: static;
+            }
+
+            .product-title {
+                font-size: 2.2rem;
+            }
+
+            .product-actions {
+                flex-direction: column;
+            }
+
+            .nav-links {
+                gap: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">COSMATRIX<span>.</span></div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="breadcrumb-container">
+            <a href="index.html">Home</a>
+            <span>/</span>
+            <a href="shop.html">Shop</a>
+            <span>/</span>
+            <a href="#">Serums</a>
+            <span>/</span>
+            <span style="color: var(--primary-pink);">Advanced Vitamin C Serum</span>
+        </div>
+    </div>
+
+    <!-- Product Section -->
+    <section class="product-section">
+        <div class="product-container">
+            <!-- Product Gallery -->
+            <div class="product-gallery">
+                <div class="main-image">✦</div>
+                <div class="thumbnail-gallery">
+                    <div class="thumbnail active">✦</div>
+                    <div class="thumbnail">✧</div>
+                    <div class="thumbnail">◆</div>
+                    <div class="thumbnail">❖</div>
+                </div>
+            </div>
+
+            <!-- Product Details -->
+            <div class="product-details">
+                <div class="product-category">Serums — Professional Grade</div>
+                <h1 class="product-title">Advanced Vitamin C Serum</h1>
+                <div class="product-price">₹3,850</div>
+                <p class="wholesale-note">Wholesale pricing available — request via WhatsApp</p>
+
+                <p class="product-description">
+                    Our Advanced Vitamin C Serum delivers professional-strength brightening and antioxidant protection with 20% L-Ascorbic Acid in a stabilized formula. Clinically proven to reduce hyperpigmentation, boost collagen production, and protect against environmental damage. This medical-grade formulation is designed for professional application in clinical settings.
+                </p>
+
+                <div class="product-features">
+                    <h3>Key Benefits</h3>
+                    <ul class="feature-list">
+                        <li>20% pharmaceutical-grade L-Ascorbic Acid for maximum efficacy</li>
+                        <li>Stabilized formula maintains potency and prevents oxidation</li>
+                        <li>Reduces appearance of dark spots and uneven skin tone</li>
+                        <li>Stimulates collagen synthesis for improved skin firmness</li>
+                        <li>Provides powerful antioxidant protection against free radicals</li>
+                        <li>Suitable for all skin types when used under professional guidance</li>
+                        <li>Cruelty-free and dermatologically tested</li>
+                    </ul>
+                </div>
+
+                <div class="quantity-selector">
+                    <label>Quantity:</label>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="decreaseQty()">−</button>
+                        <input type="number" class="quantity-input" value="1" min="1" id="qty">
+                        <button class="quantity-btn" onclick="increaseQty()">+</button>
+                    </div>
+                </div>
+
+                <div class="product-actions">
+                    <button class="btn btn-primary">Add to Cart</button>
+                    <a href="https://wa.me/919876543210?text=I'm%20interested%20in%20wholesale%20pricing%20for%20Advanced%20Vitamin%20C%20Serum" class="btn btn-whatsapp">
+                        <span>💬</span> WhatsApp for Wholesale
+                    </a>
+                </div>
+
+                <div class="product-meta">
+                    <div class="meta-item">
+                        <span class="meta-label">SKU:</span>
+                        <span class="meta-value">COS-SER-001</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Category:</span>
+                        <span class="meta-value">Serums</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Volume:</span>
+                        <span class="meta-value">30ml</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Origin:</span>
+                        <span class="meta-value">Authentic, Manufacturer Direct</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">For:</span>
+                        <span class="meta-value">Professional Use Only</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Products -->
+    <section class="related-section">
+        <div class="related-container">
+            <h2 class="section-title">You May Also Like</h2>
+            <div class="related-grid">
+                <div class="related-card">
+                    <div class="related-image">◆</div>
+                    <div class="related-info">
+                        <h3 class="related-name">Retinol Advanced Night Treatment</h3>
+                        <div class="related-price">₹6,400</div>
+                    </div>
+                </div>
+                <div class="related-card">
+                    <div class="related-image">✧</div>
+                    <div class="related-info">
+                        <h3 class="related-name">Hyaluronic Hydration Complex</h3>
+                        <div class="related-price">₹4,500</div>
+                    </div>
+                </div>
+                <div class="related-card">
+                    <div class="related-image">❖</div>
+                    <div class="related-info">
+                        <h3 class="related-name">Niacinamide Brightening Serum</h3>
+                        <div class="related-price">₹3,200</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-section">
+                <h3>COSMATRIX</h3>
+                <p>Your trusted source for luxury clinical beauty products. Supplying professionals worldwide with authentic, premium formulations.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <a href="about.html">About Us</a>
+                <a href="shop.html">Shop Products</a>
+                <a href="contact.html">Contact</a>
+                <a href="wholesale.html">Wholesale Inquiry</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p>Email: info@cosmatrix.com</p>
+                <p>WhatsApp: +91 XXX XXX XXXX</p>
+                <p>Business Hours: Mon-Sat, 9AM-6PM</p>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 COSMATRIX INTERNATIONAL. All rights reserved.</p>
+            <p class="footer-note">For professional use only</p>
+        </div>
+    </footer>
+
+    <script>
+        function increaseQty() {
+            const input = document.getElementById('qty');
+            input.value = parseInt(input.value) + 1;
+        }
+
+        function decreaseQty() {
+            const input = document.getElementById('qty');
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+            }
+        }
+
+        // Thumbnail gallery functionality
+        const thumbnails = document.querySelectorAll('.thumbnail');
+        thumbnails.forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                thumbnails.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

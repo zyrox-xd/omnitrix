@@ -3,48 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cosmatrix - Lock In</title>
+    <title>Cosmatrix - Slide Concept</title>
     <style>
         body {
             background-color: #000;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             overflow: hidden;
             touch-action: none;
             -webkit-user-select: none;
             user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            font-family: sans-serif;
         }
 
+        /* Helper Text */
+        .instruction {
+            color: #ff00ff;
+            margin-bottom: 20px;
+            opacity: 0.6;
+            letter-spacing: 2px;
+            font-size: 14px;
+            text-transform: uppercase;
+            animation: pulse 2s infinite;
+            pointer-events: none;
+        }
+
+        /* The Device */
         .omnitrix-container {
             position: relative;
-            width: 350px;
-            height: 350px;
+            /* Responsive Sizing */
+            width: 80vw;
+            max-width: 400px;
+            aspect-ratio: 1 / 1;
             border-radius: 50%;
             background: #000;
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.25), inset 0 0 30px #000;
+            box-shadow: 
+                0 0 30px rgba(255, 0, 255, 0.15), 
+                inset 0 0 40px #000;
             border: 4px solid #1a1a1a;
             display: flex;
             justify-content: center;
             align-items: center;
+            /* Smooth transition for the rotation */
+            transition: transform 0.1s ease-out; 
         }
 
-        /* The layer that rotates */
+        /* Rotating Layer */
         #dial-rotating-layer {
             width: 100%;
             height: 100%;
             position: relative;
             border-radius: 50%;
             will-change: transform;
-            /* Transition is managed by JS classes */
-        }
-
-        /* Smooth transition class for the "Locking" movement */
-        .locking-movement {
-            transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy lock effect */
+            /* IMPORTANT: We add a transition here for the 'Slide' feel */
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
         /* Images */
@@ -54,39 +70,55 @@
             object-fit: cover;
             border-radius: 50%;
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             pointer-events: none;
-            transition: opacity 0.4s ease-out; /* Fast fade */
+            transition: opacity 0.3s ease;
             filter: drop-shadow(0 0 10px #ff00ff);
         }
 
-        #front-dial-image {
-            z-index: 2;
-            opacity: 1;
+        #front-dial-image { z-index: 2; opacity: 1; }
+        #back-thankyou-image { 
+            z-index: 1; opacity: 0; 
+            transform: scale(0.8);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        #back-thankyou-image {
-            z-index: 1;
-            opacity: 0;
-            transform: scale(0.9); /* Starts slightly smaller */
-            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        /* Visual Feedback for Slide */
+        .slide-track {
+            position: absolute;
+            bottom: 10%;
+            width: 200px;
+            height: 4px;
+            background: rgba(255, 0, 255, 0.2);
+            border-radius: 2px;
+        }
+        .slide-thumb {
+            width: 40px;
+            height: 4px;
+            background: #ff00ff;
+            border-radius: 2px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 0 10px #ff00ff;
+            transition: transform 0.1s;
         }
 
-        /* --- LOCKED STATE --- */
-        .is-locked #front-dial-image {
-            opacity: 0;
+        /* Locked State */
+        .is-locked #front-dial-image { opacity: 0; }
+        .is-locked #back-thankyou-image { 
+            opacity: 1; 
+            transform: scale(1); 
+            filter: drop-shadow(0 0 40px #ff00ff) brightness(1.2);
         }
 
-        .is-locked #back-thankyou-image {
-            opacity: 1;
-            transform: scale(1); /* Popping effect */
-            filter: drop-shadow(0 0 30px #ff00ff) brightness(1.2);
-        }
+        @keyframes pulse { 0% { opacity: 0.3; } 50% { opacity: 0.8; } 100% { opacity: 0.3; } }
 
     </style>
 </head>
 <body>
+
+    <div class="instruction">Swipe Left or Right to Rotate</div>
 
     <div class="omnitrix-container" id="touch-zone">
         <div id="dial-rotating-layer">
@@ -95,89 +127,133 @@
         </div>
     </div>
 
+    <!-- Visual cue at bottom -->
+    <div class="slide-track"><div class="slide-thumb" id="thumb"></div></div>
+
     <script>
-        const touchZone = document.getElementById('touch-zone');
+        const touchZone = document.body; // Swipe anywhere on screen
         const rotatingLayer = document.getElementById('dial-rotating-layer');
         const frontImage = document.getElementById('front-dial-image');
+        const thumb = document.getElementById('thumb');
 
         // Config
         const sectors = [
             { src: "image_1.jpg" }, // 0
-            { src: "image_3.jpg" }, // 1 (90)
-            { src: "image_4.jpg" }, // 2 (180)
-            { src: "image_2.jpg" }  // 3 (270)
+            { src: "image_3.jpg" }, // 90
+            { src: "image_4.jpg" }, // 180
+            { src: "image_2.jpg" }  // 270
         ];
-
+        
         // Preload
         sectors.forEach(s => { const img = new Image(); img.src = s.src; });
 
+        let startX = 0;
+        let currentRotation = 0;
+        let targetRotation = 0;
         let isDragging = false;
         let isLocked = false;
-        let startAngle = 0;
-        let currentRotation = 0;
 
-        function getAngle(x, y) {
-            const rect = touchZone.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            return Math.atan2(y - centerY, x - centerX) * (180 / Math.PI) + 90;
-        }
+        // --- SWIPE LOGIC ---
 
-        // --- DRAG LOGIC ---
         function handleStart(e) {
             if (isLocked) return;
-            if(e.cancelable) e.preventDefault();
-            
-            // Remove smooth transition so dragging is instant and follows finger
-            rotatingLayer.classList.remove('locking-movement');
-            
             isDragging = true;
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            startAngle = getAngle(clientX, clientY) - currentRotation;
+            startX = e.touches ? e.touches[0].clientX : e.clientX;
+            
+            // Remove transition for instant dragging feel
+            rotatingLayer.style.transition = 'none';
         }
 
         function handleMove(e) {
             if (!isDragging || isLocked) return;
-            if(e.cancelable) e.preventDefault();
-
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
             
-            currentRotation = getAngle(clientX, clientY) - startAngle;
-            rotatingLayer.style.transform = `rotate(${currentRotation}deg)`;
+            const x = e.touches ? e.touches[0].clientX : e.clientX;
+            const deltaX = x - startX;
+            
+            // 1. VISUAL FEEDBACK: Move the little thumb bar
+            thumb.style.transform = `translateX(calc(-50% + ${deltaX / 5}px))`;
 
-            // Swap active image
-            let normalizedRot = currentRotation % 360;
+            // 2. ROTATION LOGIC: Map horizontal pixels to degrees
+            // Dragging 3px = 1 degree rotation
+            const rotationOffset = deltaX / 2.5; 
+            const tempRotation = targetRotation + rotationOffset;
+            
+            rotatingLayer.style.transform = `rotate(${tempRotation}deg)`;
+
+            // 3. IMAGE SWAP (Preview)
+            updateImage(tempRotation);
+        }
+
+        function handleEnd(e) {
+            if (!isDragging || isLocked) return;
+            isDragging = false;
+
+            const x = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+            const deltaX = x - startX;
+
+            // 4. SNAP LOGIC
+            // If user swiped more than 50px, snap to next/prev sector (90 degrees)
+            if (deltaX > 50) {
+                targetRotation += 90; // Swipe Right -> Clockwise
+            } else if (deltaX < -50) {
+                targetRotation -= 90; // Swipe Left -> Counter-Clockwise
+            } else {
+                // If swipe was small, snap back to original (do nothing)
+            }
+
+            // Apply smooth snap animation
+            rotatingLayer.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
+            rotatingLayer.style.transform = `rotate(${targetRotation}deg)`;
+            
+            // Reset thumb
+            thumb.style.transform = `translateX(-50%)`;
+
+            // Update Image Final
+            updateImage(targetRotation);
+        }
+
+        function updateImage(rotation) {
+            let normalizedRot = Math.round(rotation) % 360;
             if (normalizedRot < 0) normalizedRot += 360;
+            
+            // Shift 45deg to center the zone
             let activeSectorIndex = Math.floor((normalizedRot + 45) / 90) % 4;
             
-            if (!frontImage.src.includes(sectors[activeSectorIndex].src)) {
-                frontImage.src = sectors[activeSectorIndex].src;
-                if (navigator.vibrate) navigator.vibrate(10);
+            let newSrc = sectors[activeSectorIndex].src;
+            if (!frontImage.src.includes(newSrc)) {
+                frontImage.src = newSrc;
+                if (navigator.vibrate) navigator.vibrate(15);
             }
         }
 
-        function handleEnd() {
-            isDragging = false;
-        }
-
-        // --- TAP TO LOCK LOGIC ---
-        let tapStartTime = 0;
-        touchZone.addEventListener('touchstart', (e) => { tapStartTime = new Date().getTime(); handleStart(e); }, {passive: false});
-        touchZone.addEventListener('touchend', (e) => { 
-            handleEnd();
-            if (new Date().getTime() - tapStartTime < 200) lockIn();
-        });
+        // --- LOCK IN (TAP) ---
+        // We detect a tap if deltaX was very small (< 5px)
         
-        // Mouse
-        touchZone.addEventListener('mousedown', (e) => { tapStartTime = new Date().getTime(); handleStart(e); });
+        touchZone.addEventListener('mousedown', handleStart);
         window.addEventListener('mousemove', handleMove);
-        window.addEventListener('mouseup', () => { 
-            handleEnd();
-            if (new Date().getTime() - tapStartTime < 200) lockIn();
+        window.addEventListener('mouseup', (e) => {
+            if(!isDragging) return;
+            const deltaX = Math.abs(e.clientX - startX);
+            if(deltaX < 5) {
+                lockIn();
+            } else {
+                handleEnd(e);
+            }
         });
+
+        touchZone.addEventListener('touchstart', handleStart, {passive: false});
         window.addEventListener('touchmove', handleMove, {passive: false});
+        window.addEventListener('touchend', (e) => {
+             if(!isDragging) return;
+             // Calc delta
+             const endX = e.changedTouches[0].clientX;
+             const deltaX = Math.abs(endX - startX);
+             if(deltaX < 5) {
+                 lockIn();
+             } else {
+                 handleEnd(e);
+             }
+        });
 
 
         function lockIn() {
@@ -185,33 +261,19 @@
             isLocked = true;
             isDragging = false;
 
-            // 1. Calculate the shortest path to "Upright" (0 degrees relative)
-            // If we are at 350, go to 360. If at 10, go to 0. If at -10, go to 0.
-            // This ensures we don't spin wildly, just snap to center.
-            let nearestUpright = Math.round(currentRotation / 360) * 360;
+            // Snap to nearest 90
+            let snap = Math.round(targetRotation / 90) * 90;
             
-            // 2. Add transition class for smooth movement
-            rotatingLayer.classList.add('locking-movement');
+            rotatingLayer.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+            rotatingLayer.style.transform = `rotate(${snap}deg)`;
 
-            // 3. Trigger the visual changes
-            requestAnimationFrame(() => {
-                // Rotate to center
-                rotatingLayer.style.transform = `rotate(${nearestUpright}deg)`;
-                // Update rotation var so subsequent drags start from correct spot
-                currentRotation = nearestUpright; 
-                
-                // Fade swap
-                touchZone.classList.add('is-locked');
-            });
+            document.body.classList.add('is-locked');
+            if (navigator.vibrate) navigator.vibrate([50]);
 
-            // 4. Haptic Feedback (Heavy Thud)
-            if (navigator.vibrate) navigator.vibrate([70]);
-
-            // 5. Reset after 3 seconds
             setTimeout(() => {
-                touchZone.classList.remove('is-locked');
+                document.body.classList.remove('is-locked');
                 isLocked = false;
-                // Switch front image back to start
+                // Reset front image
                 frontImage.src = sectors[0].src;
             }, 3000);
         }
